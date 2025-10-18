@@ -32,6 +32,10 @@ namespace IMCC_Emulator {
 
       RegisterSet registers;
 
+      ControlWord controlBus;
+      word dataBus;
+      word addrBus;
+
       CPU(double freq) : components({
                            Component(&clock, clock.update),
                            Component(&registers, registers.update),
@@ -58,10 +62,6 @@ namespace IMCC_Emulator {
       void loadReg(uint8_t regSelect, word addr);
 
     private:
-      ControlWord controlBus;
-      word dataBus;
-      word addrBus;
-
       Clock clock;
       RAM memory;
 
