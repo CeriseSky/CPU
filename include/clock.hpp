@@ -8,7 +8,7 @@ namespace IMCC_Emulator {
 
   class Clock {
     public:
-      Clock(IMCC_Emulator::SigControl *pControlBus, double frequency) :
+      Clock(ControlWord *pControlBus, double frequency) :
         frequency(frequency),
         lastCycle(clock()),
         pControlBus(pControlBus) {}
@@ -18,7 +18,7 @@ namespace IMCC_Emulator {
     private:
       double frequency;
       clock_t lastCycle;
-      IMCC_Emulator::SigControl *pControlBus;
+      ControlWord *pControlBus;
   };
 
 };

@@ -10,10 +10,10 @@ OUTPUT_DIRS:=$(PREFIX) \
              $(TMP) \
              $(BIN) \
 
-CC:=clang++
-CFLAGS:=-Wall -Werror -Wpedantic -std=gnu++23 -I$(INCLUDE) -O3 -MMD -MP
+CC:=g++
+CFLAGS:=-Wall -Werror -std=gnu++23 -I$(INCLUDE) -O3 -MMD -MP
 
-LD:=clang++
+LD:=g++
 LDFLAGS=
 
 SOURCES:=$(wildcard $(SRC)/*.cpp)

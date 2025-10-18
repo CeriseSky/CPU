@@ -1,17 +1,24 @@
 #ifndef _SIGNALS_HPP_
 #define _SIGNALS_HPP_
 
+#include <bit>
 #include <cstdint>
 
 namespace IMCC_Emulator {
-  enum eSigControl : uint8_t {
-    CLK = 1 << 0,
-    ACC_R = 1 << 1,
-    ACC_W = 1 << 2,
-  };
-  using SigControl = uint8_t;
+  struct ControlWord {
+    bool clock : 1;
+    bool regOpen : 1;
+    uint8_t regSelect : 3;
+    bool regIn : 1; // 1 = dataBus into register, 0 = register into databus
+    bool memOpen : 1;
+    bool memIn : 1;
 
-
+    constexpr ControlWord(uint8_t sig) {
+      *this = std::bit_cast<ControlWord>(sig);
+    }
+  } __attribute__((packed));
+  static_assert(sizeof(ControlWord) == sizeof(uint8_t),
+                "ControlWord does not match SigControl");
 };
 
 #endif

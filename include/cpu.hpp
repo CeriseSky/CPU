@@ -2,16 +2,14 @@
 #define _CPU_HPP_
 
 #include <clock.hpp>
-#include <control.hpp>
-#include <cstdint>
+#include <memory.hpp>
+#include <registers.hpp>
 #include <signals.hpp>
 #include <vector>
 
 namespace IMCC_Emulator {
   class CPU {
     public:
-      using word = uint8_t;
-
       struct Component {
         using update_t = void (*)(void *);
 
@@ -32,28 +30,48 @@ namespace IMCC_Emulator {
           update();
       }
 
-      CPU(double freq) : components({
-                           Component(&clock, clock.update),
-                           Component(&cu, cu.update),
-                         }),
-                         registers({!HALTED}),
-                         controlBus(0),
-                         clock(&controlBus, freq),
-                         cu(&controlBus) {}
-
-      enum eFlags : word {
-        HALTED = 1 << 0,
-      };
-      struct RegisterSet {
-        word flags;
-      };
       RegisterSet registers;
 
+      CPU(double freq) : components({
+                           Component(&clock, clock.update),
+                           Component(&registers, registers.update),
+                           Component(&memory, memory.update),
+                         }),
+                         registers(&controlBus, &dataBus),
+                         controlBus(0),
+                         clock(&controlBus, freq),
+                         memory(&addrBus, &controlBus, &dataBus,
+                                &registers.select[RS_MEM_ADDR],
+                                &registers.select[RS_MEM_DATA],
+                                0xff /* tmp max addr */) {}
+
+      // registers.select[regSelect] will = val after this call is finished,
+      // Takes 3 clock cycles
+      void setReg(uint8_t regSelect, word val);
+
+      // registers.select[a] = registers.select[b] after this call is finished.
+      // Takes 4 clock cycles
+      void setRegR(uint8_t a, uint8_t b);
+
+      // registers.select[regSelect] will = the val at address addr after this
+      // call is finished. Takes 8 clock cycles
+      void loadReg(uint8_t regSelect, word addr);
+
     private:
-      SigControl controlBus;
+      ControlWord controlBus;
+      word dataBus;
+      word addrBus;
 
       Clock clock;
-      ControlUnit cu;
+      RAM memory;
+
+      // waits for next clock signal
+      inline void cycle() {
+        do tick(); while(!controlBus.clock);
+      }
+
+      // read from/write to the data bus
+      void regIO(uint8_t regSelect, bool write);
  };
 
 };
