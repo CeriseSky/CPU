@@ -2,7 +2,6 @@
 #define _CPU_HPP_
 
 #include <clock.hpp>
-#include <memory.hpp>
 #include <registers.hpp>
 #include <signals.hpp>
 #include <vector>
@@ -39,15 +38,10 @@ namespace IMCC_Emulator {
       CPU(double freq) : components({
                            Component(&clock, clock.update),
                            Component(&registers, registers.update),
-                           Component(&memory, memory.update),
                          }),
                          registers(&controlBus, &dataBus),
                          controlBus(0),
-                         clock(&controlBus, freq),
-                         memory(&addrBus, &controlBus, &dataBus,
-                                &registers.select[RS_MEM_ADDR],
-                                &registers.select[RS_MEM_DATA],
-                                0xff /* tmp max addr */) {}
+                         clock(&controlBus, freq) {}
 
       // registers.select[regSelect] will = val after this call is finished,
       // Takes 3 clock cycles
@@ -63,7 +57,6 @@ namespace IMCC_Emulator {
 
     private:
       Clock clock;
-      RAM memory;
 
       // waits for next clock signal
       inline void cycle() {
