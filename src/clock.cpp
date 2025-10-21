@@ -1,12 +1,21 @@
+#include <chrono>
 #include <clock.hpp>
 
 void IMCC_Emulator::Clock::update(void *data) {
   auto self = (Clock *)data;
   self->pControlBus->clock = 0;
 
-  if( ((double)clock() - self->lastCycle)/CLOCKS_PER_SEC >= 0.5/self->frequency ) {
+  using std::chrono::high_resolution_clock;
+  using std::chrono::system_clock;
+  using std::chrono::duration;
+  using std::chrono::seconds;
+
+  auto now = high_resolution_clock::now();
+  duration<double> dur = now - self->lastCycle;
+
+  if( dur.count() >= 1.0/self->frequency ) {
     self->pControlBus->clock = 1;
-    self->lastCycle = clock();
+    self->lastCycle = now;
   }
 }
 

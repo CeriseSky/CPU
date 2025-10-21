@@ -12,12 +12,13 @@ namespace IMCC_Emulator {
     bool regIn : 1; // 1 = dataBus into register, 0 = register into databus
     bool memOpen : 1;
     bool memIn : 1;
+    bool pcInc : 1;
 
-    constexpr ControlWord(uint8_t sig) {
+    constexpr ControlWord(uint16_t sig) {
       *this = std::bit_cast<ControlWord>(sig);
     }
   } __attribute__((packed));
-  static_assert(sizeof(ControlWord) == sizeof(uint8_t),
+  static_assert(sizeof(ControlWord) == sizeof(uint16_t),
                 "ControlWord does not match SigControl");
 };
 

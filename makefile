@@ -10,11 +10,12 @@ OUTPUT_DIRS:=$(PREFIX) \
              $(TMP) \
              $(BIN) \
 
-CC:=g++
-CFLAGS:=-Wall -Werror -std=gnu++23 -I$(INCLUDE) -O3 -MMD -MP
+CC:=clang++
+CFLAGS:=-Wall -Werror -std=gnu++23 -I$(INCLUDE) -O3 -MMD -MP \
+		-Wno-c99-designator
 
-LD:=g++
-LDFLAGS=
+LD:=clang++
+LIBS:=
 
 SOURCES:=$(wildcard $(SRC)/*.cpp)
 
@@ -34,7 +35,7 @@ $(OUTPUT_DIRS):
 	mkdir -p "$@"
 
 $(BIN)/$(APP_NAME): $(OBJS)
-	$(LD) $(LDFLAGS) $(OBJS) -o "$@"
+	$(LD) $(OBJS) $(LIBS) -o "$@"
 
 -include $(DEPENDS)
 

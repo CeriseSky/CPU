@@ -1,8 +1,8 @@
 #ifndef _CPU_HPP_
 #define _CPU_HPP_
 
+#include <architecture.hpp>
 #include <clock.hpp>
-#include <registers.hpp>
 #include <signals.hpp>
 #include <vector>
 
@@ -29,17 +29,12 @@ namespace IMCC_Emulator {
           update();
       }
 
-      RegisterSet registers;
-
       ControlWord controlBus;
       word dataBus;
-      word addrBus;
 
       CPU(double freq) : components({
                            Component(&clock, clock.update),
-                           Component(&registers, registers.update),
                          }),
-                         registers(&controlBus, &dataBus),
                          controlBus(0),
                          clock(&controlBus, freq) {}
 
@@ -55,6 +50,8 @@ namespace IMCC_Emulator {
       // call is finished. Takes 8 clock cycles
       void loadReg(uint8_t regSelect, word addr);
 
+      void step();
+
     private:
       Clock clock;
 
@@ -63,8 +60,12 @@ namespace IMCC_Emulator {
         do tick(); while(!controlBus.clock);
       }
 
+      void fetch();
+      void execute();
+
       // read from/write to the data bus
       void regIO(uint8_t regSelect, bool write);
+      void memIO(bool write);
  };
 
 };

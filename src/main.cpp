@@ -8,23 +8,22 @@
 int main(void) {
   using namespace IMCC_Emulator;
 
-  CPU myCpu(1.0);
+  CPU myCpu(5.0);
 
-  Logger info(&myCpu);
-  ROM rom("test.rom", &myCpu.addrBus, &myCpu.controlBus, &myCpu.dataBus,
-          &myCpu.registers.select[RS_MEM_ADDR],
-          &myCpu.registers.select[RS_MEM_DATA]);
+  RegisterSet registers(&myCpu.controlBus, &myCpu.dataBus);
+  myCpu.components.push_back(CPU::Component(&registers, registers.update));
 
-  myCpu.components.push_back(CPU::Component(&info, info.update));
+  ROM rom("test.rom", &myCpu.controlBus,
+          &registers.select[RS_MEM_ADDR],
+          &registers.select[RS_MEM_DATA]);
   myCpu.components.push_back(CPU::Component(&rom, rom.update));
 
-  while( !(myCpu.registers.select[RS_FLAGS] & HALTED) ) {
-    myCpu.loadReg(RS_ACC, 0);
-    myCpu.setReg(RS_FLAGS, HALTED);
-  }
+  Logger info(&myCpu, &registers);
+  myCpu.components.push_back(CPU::Component(&info, info.update));
 
-  std::cout << "Accumulator = " <<
-    std::format("0x{:X}\n", myCpu.registers.select[RS_ACC]);
+  while( !(registers.select[RS_FLAGS] & HALTED) )
+    myCpu.step();
+
   std::cerr << "CPU has finished execution.\n";
   return EXIT_SUCCESS;
 }

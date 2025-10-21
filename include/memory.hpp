@@ -6,24 +6,22 @@
 
 namespace IMCC_Emulator {
 
+  // doesn't use any address bus: instead it can be thought of as being
+  // directly wired/connected to the MDR and MAR of the register set
   class ROM {
-    static constexpr uint8_t initVal = 0xe5;
-
     public:
-      ROM(const char *path, word *pAddrBus, ControlWord *pControlBus,
-          word *pDataBus, word *pMar, word *pMdr) :
-        pAddrBus(pAddrBus),
+      ROM(const char *path, ControlWord *pControlBus,
+          word *pMar, word *pMdr) :
         pControlBus(pControlBus),
-        pDataBus(pDataBus),
         pMar(pMar), pMdr(pMdr) {
           std::fstream file(path);
           if(!file.is_open())
             throw std::runtime_error("Failed to open ROM file");
 
-          file.seekg(std::ios::end);
+          file.seekg(0, std::ios::end);
           size_t size = file.tellg();
           storage.resize(size);
-          file.seekg(std::ios::beg);
+          file.seekg(0, std::ios::beg);
           file.read((char *)storage.data(), size);
           if(file.fail())
             throw std::runtime_error("Failed to read ROM file");
@@ -32,9 +30,7 @@ namespace IMCC_Emulator {
       static void update(void *data);
 
     private:
-      word *pAddrBus;
       ControlWord *pControlBus;
-      word *pDataBus;
 
       word *pMar;
       word *pMdr;

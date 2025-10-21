@@ -1,7 +1,7 @@
 #ifndef _CLOCK_HPP_
 #define _CLOCK_HPP_
 
-#include <ctime>
+#include <chrono>
 #include <signals.hpp>
 
 namespace IMCC_Emulator {
@@ -10,14 +10,13 @@ namespace IMCC_Emulator {
     public:
       Clock(ControlWord *pControlBus, double frequency) :
         frequency(frequency),
-        lastCycle(clock()),
         pControlBus(pControlBus) {}
 
       static void update(void *data);
 
     private:
       double frequency;
-      clock_t lastCycle;
+      std::chrono::system_clock::time_point lastCycle;
       ControlWord *pControlBus;
   };
 

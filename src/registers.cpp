@@ -6,9 +6,14 @@ void IMCC_Emulator::RegisterSet::update(void *data) {
   auto self = (RegisterSet *)data;
   auto &cw = self->pControlBus;
 
-  if(!cw->clock || !cw->regOpen)
+  if(!cw->clock)
     return;
 
+  if(cw->pcInc)
+    self->select[RS_PC]++;
+
+  if(!cw->regOpen)
+    return;
   for(size_t i = 0; i < sizeof(self->select)/sizeof(word); i++)
     if(cw->regSelect == i) {
       if(cw->regIn)
