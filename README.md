@@ -31,3 +31,15 @@ The machine is little endian, so the binary for LDA 6 would be:
 00000001 00000000 00000110 00000000
 ```
 
+## Building a ROM
+
+It is recommended to use one of the example ROMs for this procedure. You will
+need my tool flasher (https://github.com/CeriseSky/flasher) installed in the
+system path. Then:
+
+```
+$ ./scripts/make_roms.sh
+$ mv {vrom,test}.rom
+$ flasher test.rom 0 roms/test2.txt
+```
+
