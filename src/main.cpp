@@ -1,14 +1,15 @@
 #include <clock.hpp>
 #include <cstdlib>
 #include <cpu.hpp>
+#include <iostream>
 #include <memory.hpp>
 #include <logger.hpp>
-#include <iostream>
+#include <print>
 
 int main(void) {
   using namespace IMCC_Emulator;
 
-  CPU myCpu(5.0);
+  CPU myCpu(10.0);
 
   RegisterSet registers(&myCpu.controlBus, &myCpu.dataBus);
   myCpu.components.push_back(CPU::Component(&registers, registers.update));
@@ -24,7 +25,9 @@ int main(void) {
   while( !(registers.select[RS_FLAGS] & HALTED) )
     myCpu.step();
 
-  std::cerr << "CPU has finished execution.\n";
+  info.log();
+  std::println(std::cerr, "CPU has finished execution.");
+
   return EXIT_SUCCESS;
 }
 

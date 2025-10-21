@@ -4,8 +4,6 @@
 
 namespace IMCC_Emulator {
   void CPU::setReg(uint8_t regSelect, word val) {
-    cycle();
-
     dataBus = val;
     regIO(regSelect, true);
   }
@@ -17,8 +15,6 @@ namespace IMCC_Emulator {
   }
 
   void CPU::regIO(uint8_t regSelect, bool write) {
-    cycle();
-
     controlBus.regSelect = regSelect;
     controlBus.regIn = write;
     controlBus.regOpen = true;
@@ -56,8 +52,6 @@ namespace IMCC_Emulator {
   }
 
   void CPU::memIO(bool write) {
-    cycle();
-
     controlBus.memOpen = true;
     controlBus.memIn = write;
     cycle();
