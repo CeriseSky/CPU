@@ -58,26 +58,5 @@ namespace IMCC_Emulator {
 
     controlBus.memOpen = false;
   }
-
-  void CPU::execute() {
-    regIO(RS_CIR_OP, false);
-
-    switch(dataBus) {
-      case OP_HLT:
-        regIO(RS_FLAGS, false);
-        dataBus |= HALTED;
-        regIO(RS_FLAGS, true);
-        break;
-
-      case OP_LDA:
-        setRegR(RS_MEM_ADDR, RS_CIR_DATA);
-        memIO(false);
-        setRegR(RS_ACC, RS_MEM_DATA);
-        break;
-
-      default:
-        break;
-    }
-  }
 }
 

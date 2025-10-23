@@ -1,3 +1,4 @@
+#include <alu.hpp>
 #include <clock.hpp>
 #include <cstdlib>
 #include <cpu.hpp>
@@ -21,6 +22,9 @@ int main(void) {
 
   Logger info(&myCpu, &registers);
   myCpu.components.push_back(CPU::Component(&info, info.update));
+
+  ALU alu(&myCpu.controlBus, &myCpu.dataBus, &registers.select[RS_ACC]);
+  myCpu.components.push_back(CPU::Component(&alu, alu.update));
 
   while( !(registers.select[RS_FLAGS] & HALTED) )
     myCpu.step();

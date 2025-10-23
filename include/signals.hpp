@@ -5,6 +5,15 @@
 #include <cstdint>
 
 namespace IMCC_Emulator {
+  enum ALU_OP : uint8_t {
+    ALU_ADD = 0,
+
+    __num_alu_operations,
+  };
+  constexpr uint8_t aluOpBits = 1;
+  static_assert(__num_alu_operations <= 1 << aluOpBits,
+                "Too many ALU operations for the control bus");
+
   struct ControlWord {
     bool clock : 1;
     bool regOpen : 1;
@@ -13,6 +22,8 @@ namespace IMCC_Emulator {
     bool memOpen : 1;
     bool memIn : 1;
     bool pcInc : 1;
+    bool aluOpen : 1;
+    ALU_OP aluOperation : aluOpBits;
 
     constexpr ControlWord(uint16_t sig) {
       *this = std::bit_cast<ControlWord>(sig);

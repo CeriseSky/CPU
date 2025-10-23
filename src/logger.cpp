@@ -38,21 +38,21 @@ namespace IMCC_Emulator {
     std::print(std::cerr,
         "\033[2J\033[H"
 
-        "Memory Address Register: 0b{:016b}\n"
-        "Memory Data Register: 0b{:016b}\n"
+        "Memory Address Register: 0x{:04x}\n"
+        "Memory Data Register: 0x{:04x}\n"
         "\n"
 
-        "Accumulator: 0b{:016b}\n"
+        "Accumulator: 0x{:04x}\n"
         "Flags: 0b{:016b}\n"
-        "Program Counter: 0x{:02x}\n"
+        "Program Counter: 0x{:04x}\n"
         "\n"
 
-        "Opcode: 0b{:016b}\n"
-        "Operand: 0b{:016b}\n"
+        "Opcode: 0x{:04x}\n"
+        "Operand: 0x{:04x}\n"
         "\n"
 
         "Control Bus: 0b{:016b}\n"
-        "Data Bus: 0b{:016b}\n"
+        "Data Bus: 0x{:04x}\n"
         "\n"
 
         "Total Clock Cycles: {}\n"
