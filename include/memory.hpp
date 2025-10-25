@@ -1,3 +1,6 @@
+#ifndef _MEMORY_HPP_
+#define _MEMORY_HPP_
+
 #include <architecture.hpp>
 #include <fstream>
 #include <signals.hpp>
@@ -29,6 +32,29 @@ namespace IMCC_Emulator {
 
       static void update(void *data);
 
+      size_t size() { return storage.size(); }
+
+    private:
+      ControlWord *pControlBus;
+
+      word *pMar;
+      word *pMdr;
+
+      std::vector<word> storage;
+  };
+
+  class RAM {
+    public:
+      RAM(size_t bytes, ControlWord *pControlBus, word *pMar, word *pMdr) :
+        pControlBus(pControlBus),
+        pMar(pMar),
+        pMdr(pMdr),
+        storage(bytes/sizeof(word), 0) {}
+
+      static void update(void *data);
+
+      size_t size() { return storage.size(); };
+
     private:
       ControlWord *pControlBus;
 
@@ -38,4 +64,6 @@ namespace IMCC_Emulator {
       std::vector<word> storage;
   };
 }
+
+#endif
 

@@ -4,6 +4,7 @@
 #include <cpu.hpp>
 #include <iostream>
 #include <memory.hpp>
+#include <mmu.hpp>
 #include <logger.hpp>
 #include <print>
 
@@ -15,10 +16,11 @@ int main(void) {
   RegisterSet registers(&myCpu.controlBus, &myCpu.dataBus);
   myCpu.components.push_back(CPU::Component(&registers, registers.update));
 
-  ROM rom("test.rom", &myCpu.controlBus,
-          &registers.select[RS_MEM_ADDR],
-          &registers.select[RS_MEM_DATA]);
-  myCpu.components.push_back(CPU::Component(&rom, rom.update));
+  MemoryUnit mmu("test.rom", &myCpu.controlBus,
+                 &registers.select[RS_MEM_ADDR],
+                 &registers.select[RS_MEM_DATA],
+                 4096 * sizeof(word));
+  myCpu.components.push_back(CPU::Component(&mmu, mmu.update));
 
   Logger info(&myCpu, &registers);
   myCpu.components.push_back(CPU::Component(&info, info.update));

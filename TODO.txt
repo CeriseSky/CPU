@@ -3,10 +3,11 @@ include/architecture.hpp:
     all is because the loading operations use the machine's endianness
 
 General:
-  - Implement RAM and the memory controller
+  - Write documentation for MMU and ISA
   - Find a use for an address bus
-  - Implement the ALU
-  - Make the HLT instruction use the ALU to perform the logical OR
-  - Make the CPU Turing complete
   - Improve performance (15-20MHz isn't bad but its not that good either)
   - Allow dynamic width instructions
+
+Assembly:
+  - Write an assembler
+  - Add libraries to support the various components (MMU)

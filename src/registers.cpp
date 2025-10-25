@@ -12,6 +12,11 @@ void IMCC_Emulator::RegisterSet::update(void *data) {
   if(cw->pcInc)
     self->select[RS_PC]++;
 
+  if(self->select[RS_ACC])
+    self->select[RS_FLAGS] &= !ZERO;
+  else
+    self->select[RS_FLAGS] |= ZERO;
+
   if(!cw->regOpen)
     return;
   for(size_t i = 0; i < sizeof(self->select)/sizeof(word); i++)

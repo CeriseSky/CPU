@@ -7,6 +7,7 @@
 namespace IMCC_Emulator {
   enum eFlags {
     HALTED = 1 << 0,
+    ZERO = 1 << 1,
   };
 
   enum eRegisterSelect {
